@@ -8,6 +8,6 @@
                   stdlib,
 		  gnuart
                  ]},
-  {mod, { arugon_nfc_app, []}},
+  {mod, { arygon_nfc_app, []}},
   {modules,[arygon_nfc, arygon__nfc_app, arygon_nfc_sup]}
  ]}.
