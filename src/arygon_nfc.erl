@@ -14,7 +14,8 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0, send/1]).
+-export([start_link/0, open/0, close/0, send/1, 
+	 subscribe/0, unsubscribe/0]).
 
 %% gen_server callbacks
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2,
@@ -22,13 +23,32 @@
 
 -define(SERVER, ?MODULE). 
 
--record(state, {references=[]}).
+-record(state, {subscription=[], references=[]}).
 
 -include("arygon_nfc.hrl").
 
 %%%===================================================================
 %%% API
 %%%===================================================================
+
+%%--------------------------------------------------------------------
+%% @doc Open NFC reader 
+%%
+%% @spec open() -> ok
+%%--------------------------------------------------------------------
+-spec open() -> ok.
+open() ->
+    gen_server:call(?MODULE, open).
+
+
+%%--------------------------------------------------------------------
+%% @doc Close NFC reader 
+%%
+%% @spec close() -> ok
+%%--------------------------------------------------------------------
+-spec close() -> ok.
+close() ->
+    gen_server:call(?MODULE, close).
 
 %%--------------------------------------------------------------------
 %% @doc Send command to NFC reader
@@ -38,6 +58,24 @@
 -spec send( Cmd :: string()) -> ok.
 send(Cmd) ->
     gen_server:call(?MODULE, {send, Cmd}).
+
+%%--------------------------------------------------------------------
+%% @doc Subscribe a valid process to send back response 
+%%
+%% @spec subscribe() -> ok
+%%--------------------------------------------------------------------
+-spec subscribe() -> ok.
+subscribe() ->
+    gen_server:call(?MODULE, subscribe).
+
+%%--------------------------------------------------------------------
+%% @doc Unsubscribe a valid process to stop send back response               
+%%                                                                    
+%% @spec unsubscribe() -> ok                                            
+%%--------------------------------------------------------------------
+-spec unsubscribe() -> ok.                                              
+unsubscribe() ->                                                        
+    gen_server:call(?MODULE, unsubscribe). 
 
 %%--------------------------------------------------------------------
 %% @doc
@@ -67,6 +105,7 @@ start_link() ->
 init([]) ->
     process_flag(trap_exit, true),
     {ok, Ref} = gnuart:subscribe(),
+    {ok, _} = arygon_nfc_evews:start(8080),
     {ok, #state{references = [Ref]}}.
 
 %%--------------------------------------------------------------------
@@ -83,10 +122,20 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
+handle_call(open, _From, State)         ->
+    ok = gnuart:open(),
+    {reply, ok, State};
+handle_call(close, _From, State)         ->
+    ok = gnuart:close(),
+    {reply, ok, State};
 handle_call({send, Cmd}, _From, State)  ->
     {ok, flush} = gnuart:flush(Cmd),
-    {reply, ok, State}.
-
+    {reply, ok, State};
+handle_call(subscribe, {Pid, _}, #state{subscription=S, references=Refs})  ->
+    Reference = erlang:make_ref(),
+    {reply, {ok, Reference}, #state{subscription=[ {Reference, Pid} | S], references=Refs}};
+handle_call(unsubscribe, {Pid, _}, #state{subscription=S, references=Refs})  ->
+    {reply, ok, #state{subscription=[ {Ref, SPid} || {Ref, SPid} <- S, Pid =/= SPid], references=Refs}}.
 
 %%--------------------------------------------------------------------
 %% @private
@@ -111,9 +160,12 @@ handle_cast(_Msg, State) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_info({got, Ref, Got}, #state{references=[Ref]})  ->
-    error_logger:info_msg("Arygon NFC got value: ~p with reference: ~p\n", [Got, Ref]),
-    {noreply, #state{references=[Ref]}}.
+handle_info({got, Ref, Got}, #state{subscription=S, references=[Ref]})  ->
+    io:format("arygon nfc got: ~p \n", [Got]),
+    GotValue = arygon_nfc_cmds:split(Got),
+    io:format("arygon nfc got value: ~p \n", [GotValue]),
+    [ Pid ! {nfc, Ref, GotValue} || {_, Pid} <- S ],  
+    {noreply, #state{subscription=S, references=[Ref]}}.
 
 %%--------------------------------------------------------------------
 %% @private
