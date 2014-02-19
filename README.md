@@ -1,5 +1,5 @@
 
-arygon_nfc - Reader  erlang applicationi
+arygon_nfc - Reader erlang application
 ======
 
 Compile the application and build the shared object
