@@ -73,4 +73,5 @@ format_error(?RESPONSE_PACKET, ?EEPROM_LOGIN)         -> internal_eeprom_login_m
 format_error(?RESPONSE_PACKET, ?EEPROM_LOGIN_PINCODE) -> internal_eeprom_login_pincode_wrong;
 format_error(?RESPONSE_PACKET, ?PARTYLINEBUFFER)      -> receive_partylinebuffer_overflow;
 format_error(?RESPONSE_PACKET, ?INFOMESSAGE)          -> no_response_available;
-format_error(?RESPONSE_PACKET, ?LCD_BUSY)             -> lcd_timer_expired.
+format_error(?RESPONSE_PACKET, ?LCD_BUSY)             -> lcd_timer_expired;
+format_error(_,_)                                     -> unknown_error.
