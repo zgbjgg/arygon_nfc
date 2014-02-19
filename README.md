@@ -13,7 +13,7 @@ Arygon_nfc have a dependence "gnuart", is necessarily start the dependence to us
      ok
 
 Start arygon_nfc
-    
+     
     2> application:start(arygon_nfc).
     ok
 
@@ -26,7 +26,7 @@ Subscribe the process to the application
 
     4> arygon_nfc:subscribe().
 
-Sends a command to the reader
+Sends a TAMA  command to the reader
 
     5> arygon_nfc:sends("0av").
     06V0.1
