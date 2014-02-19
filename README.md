@@ -30,3 +30,13 @@ Sends a TAMA  command to the reader
 
     5> arygon_nfc:sends("0av").
     06V0.1
+
+Unsuscribe the process
+
+    6> arygon_nfc:unsusbribe().
+    ok
+
+Close the device
+
+    7> arygon_nfc:close().
+    ok
