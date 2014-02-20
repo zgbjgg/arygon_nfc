@@ -105,7 +105,6 @@ start_link() ->
 init([]) ->
     process_flag(trap_exit, true),
     {ok, Ref} = gnuart:subscribe(),
-    {ok, _} = arygon_nfc_evews:start(8080),
     {ok, #state{references = [Ref]}}.
 
 %%--------------------------------------------------------------------
