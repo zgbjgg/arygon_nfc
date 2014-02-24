@@ -35,13 +35,13 @@ Where Ref is the reference for the subscribed process and Response is the decode
 packet.
     
     
-Sends a TAMA  command to the reader
+Send a TAMA  command to the reader
 
     5> arygon_nfc:send("0av").
     arygon nfc got value: 'V6.6'
     ok
 
-Unsuscribe the process
+Unsubscribe the process
 
     6> arygon_nfc:unsusbribe().
     ok
