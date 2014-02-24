@@ -52,12 +52,9 @@
 -define(PARTYLINEBUFFER, <<"18">>).
 -define(INFOMESSAGE, <<"19">>).
 -define(LCD_BUSY, <<"1A">>).
-<<<<<<< HEAD
 
 %% gpio
 -define(BEEP_ON, "echo 1 > /sys/class/leds/beep/brightness").
 -define(BEEP_OFF, "echo 0 > /sys/class/leds/beep/brightness").
 -define(TURN_ON_NFC_LED, "echo 1 > /sys/class/leds/d9/brightness").
 -define(TURN_OFF_NFC_LED, "echo 0 > /sys/class/leds/d9/brightness"). 
-=======
->>>>>>> 18f6d9133c2b3dcf9091f4ec7eea49be893d7495

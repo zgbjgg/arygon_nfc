@@ -50,7 +50,6 @@ get_value_packet(_)						    ->
     {error, error_unknown_maybe_buffered_stuck}.
 
 %% @doc Format error as a single atom
-<<<<<<< HEAD
 %% @spec format_error(binary()) -> atom()
 -spec format_error(binary()) -> atom().
 format_error(?RINGBUFFER_INTERRUPT) -> ring_buffer_interrumpt;
@@ -80,34 +79,3 @@ format_error(?PARTYLINEBUFFER)      -> receive_partylinebuffer_overflow;
 format_error(?INFOMESSAGE)          -> no_response_available;
 format_error(?LCD_BUSY)             -> lcd_timer_expired;
 format_error(_)                     -> unknown_error_maybe_buffered_stack.
-=======
-%% @spec format_error(binary, binary) -> atom()
--spec format_error(binary, binary) -> atom().
-format_error(?RESPONSE_PACKET, ?RINGBUFFER_INTERRUPT) -> ring_buffer_interrumpt;
-format_error(?RESPONSE_PACKET, ?OVERRUN_ERROR_TAMMA)  -> overrun_error_tamma_side;
-format_error(?RESPONSE_PACKET, ?OVERRUN_ERROR_HOST)   -> overrun_error_host_side;
-format_error(?RESPONSE_PACKET, ?PACKETCHEKSUMWRONG_TAMA)  -> packet_checksum_wrong_tama;
-format_error(?RESPONSE_PACKET, ?PACKETCHEKSUMWRONG_HOST)  -> packet_checksum_wrong_host;
-format_error(?RESPONSE_PACKET, ?UNKNOWNCOMMAND)       -> unknown_command;
-format_error(?RESPONSE_PACKET, ?INTERRUPTWRITE)       -> interrupt_write_overflow;
-format_error(?RESPONSE_PACKET, ?PARAMETEROUT)         -> parameter_out_range;
-format_error(?RESPONSE_PACKET, ?ERRORAPPLICATION)     -> error_application_level;
-format_error(?RESPONSE_PACKET, ?WRONGTAMMAACK)        -> no_or_wrong_command_received;
-format_error(?RESPONSE_PACKET, ?WRONGTAMASET)         -> wrong_command_set_baud_rate;
-format_error(?RESPONSE_PACKET, ?TIMEEXPIRED)          -> time_expired;
-format_error(?RESPONSE_PACKET, ?RINGBUFFER_OVERFLOW)  -> ringbuffer_write_overflow;
-format_error(?RESPONSE_PACKET, ?WRONG_AFTER)          -> wrong_tamma_received_after_sends_command;
-format_error(?RESPONSE_PACKET, ?LENGUAGE_WRONG)       -> host_high_level_language_checksum_wrong;
-format_error(?RESPONSE_PACKET, ?FORMAT_CORRUPTED)     -> block_format_is_corrupted;
-format_error(?RESPONSE_PACKET, ?ERROR_VALUE_BLOCK)    -> error_during_increment_decrement_copy_value_block;
-format_error(?RESPONSE_PACKET, ?NOT_SUPPORTED)        -> baudrate_not_supported_with_the_current_low_speed;
-format_error(?RESPONSE_PACKET, ?EEPROM_READ)          -> internal_eeprom_read_after_write_failed;
-format_error(?RESPONSE_PACKET, ?EEPROM_CHECKSUM)      -> ckecksum_failed_warning_mesage;
-format_error(?RESPONSE_PACKET, ?EEPROM_ADDRESS)       -> internal_eeprom_address_is_out_of_the_allowed_range;
-format_error(?RESPONSE_PACKET, ?EEPROM_LOGIN)         -> internal_eeprom_login_missing;
-format_error(?RESPONSE_PACKET, ?EEPROM_LOGIN_PINCODE) -> internal_eeprom_login_pincode_wrong;
-format_error(?RESPONSE_PACKET, ?PARTYLINEBUFFER)      -> receive_partylinebuffer_overflow;
-format_error(?RESPONSE_PACKET, ?INFOMESSAGE)          -> no_response_available;
-format_error(?RESPONSE_PACKET, ?LCD_BUSY)             -> lcd_timer_expired;
-format_error(_,_)                                     -> unknown_error.
->>>>>>> 18f6d9133c2b3dcf9091f4ec7eea49be893d7495
