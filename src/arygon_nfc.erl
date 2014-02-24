@@ -161,7 +161,6 @@ handle_cast(_Msg, State) ->
 %%--------------------------------------------------------------------
 handle_info({got, Ref, Got}, #state{subscription=S, references=[Ref]})  ->
     io:format("arygon nfc got: ~p \n", [Got]),
-    ok = gpio(Got),
     GotValue = arygon_nfc_cmds:split(Got),
     io:format("arygon nfc got value: ~p \n", [GotValue]),
     [ Pid ! {nfc, Ref, GotValue} || {_, Pid} <- S ],  
@@ -179,7 +178,6 @@ handle_info({got, Ref, Got}, #state{subscription=S, references=[Ref]})  ->
 %% @end
 %%--------------------------------------------------------------------
 terminate(_Reason, _State) ->
-    ok = gpio(<<"device_close">>),
     ok.
 
 %%--------------------------------------------------------------------
@@ -192,11 +190,3 @@ terminate(_Reason, _State) ->
 %%--------------------------------------------------------------------
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
-
-gpio(?DEVICE_OPEN)  -> os:cmd(?TURN_ON_NFC_LED), ok;
-gpio(?DEVICE_CLOSE) -> os:cmd(?TURN_OFF_NFC_LED), ok;
-gpio(_)		    ->
-    os:cmd(?BEEP_ON),
-    timer:sleep(2),
-    os:cmd(?BEEP_OFF), 
-    ok.
