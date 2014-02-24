@@ -13,6 +13,8 @@
 
 -behaviour(application).
 
+-include("arygon_nfc.hrl").
+
 %% Application callbacks
 -export([start/2, stop/1]).
 
@@ -24,4 +26,5 @@ start(_StartType, _StartArgs) ->
     arygon_nfc_sup:start_link().
 
 stop(_State) ->
+    [] = os:cmd(?TURN_OFF_NFC_LED),
     ok.
